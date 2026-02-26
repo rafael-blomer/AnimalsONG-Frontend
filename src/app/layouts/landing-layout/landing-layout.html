@@ -1,0 +1,24 @@
+<header class="bg-gradient-to-r from-blue-500 to-green-600 text-white p-6 shadow-lg">
+  <div class="text-center">
+    <h1 class="text-lg font-bold mr-3"><a routerLink="" class="hover:text-yellow-300">AnimalsONG</a>
+    </h1>
+  </div>
+
+  <div class="mt-4">
+    <hr class="border-t border-blue-300 opacity-50" />
+  </div>
+
+  <nav class="mt-4">
+    <ul class="flex justify-center space-x-6 text-white font-semibold">
+      <li>
+        <a routerLink="/auth/login" class="hover:text-yellow-300">Logar</a>
+      </li>
+      <li>
+        <a routerLink="/auth/registrar" class="hover:text-yellow-300">Cadastrar</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main class="flex-1 p-6">
+  <router-outlet></router-outlet>
+</main>

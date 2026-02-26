@@ -1,0 +1,161 @@
+<main class="flex justify-center bg-gray-50 px-4 py-10 min-h-screen">
+  <div class="w-full max-w-2xl">
+
+    <div class="bg-white rounded-2xl shadow-xl p-10">
+
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800">Cadastrar animal</h2>
+        <p class="text-sm text-gray-500 mt-1">Preencha os dados do animal para cadastrá-lo na plataforma</p>
+      </div>
+
+      <!-- Erro -->
+      <div *ngIf="erro"
+        class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd" />
+        </svg>
+        <span>{{ erro }}</span>
+      </div>
+
+      <!-- Sucesso -->
+      <div *ngIf="sucesso"
+        class="mb-6 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd" />
+        </svg>
+        <span>{{ sucesso }}</span>
+      </div>
+
+      <form [formGroup]="form" class="space-y-6">
+
+        <!-- Upload de foto -->
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-700">Foto do animal</label>
+
+          <!-- Preview -->
+          <div *ngIf="fotoPreview" class="relative w-fit">
+            <img [src]="fotoPreview" alt="Preview" class="w-32 h-32 object-cover rounded-xl border border-gray-200" />
+            <button type="button" (click)="removerFoto()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white
+                     rounded-full flex items-center justify-center text-xs transition">✕</button>
+          </div>
+
+          <!-- Área de upload -->
+          <label *ngIf="!fotoPreview" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed
+                   border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
+            <svg class="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-sm text-gray-500">Clique para selecionar uma foto</span>
+            <span class="text-xs text-gray-400 mt-1">JPG, PNG ou WEBP — máx. 5MB</span>
+            <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
+              (change)="onFotoSelecionada($event)" />
+          </label>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!-- Nome -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Nome</label>
+            <input class="input" placeholder="Ex: Rex" formControlName="nome"
+              [class.border-red-400]="f['nome'].touched && f['nome'].invalid" />
+            <p *ngIf="f['nome'].touched && f['nome'].errors?.['required']" class="text-red-500 text-xs">Nome é
+              obrigatório</p>
+          </div>
+
+          <!-- Raça -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Raça</label>
+            <input class="input" placeholder="Ex: Labrador" formControlName="raca"
+              [class.border-red-400]="f['raca'].touched && f['raca'].invalid" />
+            <p *ngIf="f['raca'].touched && f['raca'].errors?.['required']" class="text-red-500 text-xs">Raça é
+              obrigatória</p>
+          </div>
+
+          <!-- Idade -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Idade aproximada (anos)</label>
+            <input class="input" type="number" min="0" placeholder="Ex: 2" formControlName="idadeAproximada"
+              [class.border-red-400]="f['idadeAproximada'].touched && f['idadeAproximada'].invalid" />
+            <p *ngIf="f['idadeAproximada'].touched && f['idadeAproximada'].errors?.['required']"
+              class="text-red-500 text-xs">Idade é obrigatória</p>
+            <p *ngIf="f['idadeAproximada'].touched && f['idadeAproximada'].errors?.['min']"
+              class="text-red-500 text-xs">A idade não pode ser negativa</p>
+          </div>
+
+          <!-- Espécie -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Espécie</label>
+            <select class="input" formControlName="especie"
+              [class.border-red-400]="f['especie'].touched && f['especie'].invalid">
+              <option value="" disabled>Selecione a espécie</option>
+              <option *ngFor="let e of especies" [value]="e.valor">{{ e.label }}</option>
+            </select>
+            <p *ngIf="f['especie'].touched && f['especie'].errors?.['required']" class="text-red-500 text-xs">Espécie é
+              obrigatória</p>
+          </div>
+
+          <!-- Porte -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Porte</label>
+            <select class="input" formControlName="porte"
+              [class.border-red-400]="f['porte'].touched && f['porte'].invalid">
+              <option value="" disabled>Selecione o porte</option>
+              <option *ngFor="let p of portes" [value]="p.valor">{{ p.label }}</option>
+            </select>
+            <p *ngIf="f['porte'].touched && f['porte'].errors?.['required']" class="text-red-500 text-xs">Porte é
+              obrigatório</p>
+          </div>
+
+          <!-- Sexo -->
+          <div class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-700">Sexo</label>
+            <select class="input" formControlName="sexo"
+              [class.border-red-400]="f['sexo'].touched && f['sexo'].invalid">
+              <option value="" disabled>Selecione o sexo</option>
+              <option *ngFor="let s of sexos" [value]="s.valor">{{ s.label }}</option>
+            </select>
+            <p *ngIf="f['sexo'].touched && f['sexo'].errors?.['required']" class="text-red-500 text-xs">Sexo é
+              obrigatório</p>
+          </div>
+
+        </div>
+
+        <!-- Castrado -->
+        <div class="flex items-center gap-3">
+          <input type="checkbox" id="castrado" formControlName="castrado"
+            class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer" />
+          <label for="castrado" class="text-sm text-gray-700 cursor-pointer">Animal castrado</label>
+        </div>
+
+        <!-- Botão -->
+        <button type="button" (click)="cadastrar()" [disabled]="carregando"
+          class="relative w-full text-white font-semibold py-3 rounded-lg transition-all overflow-hidden disabled:opacity-70"
+          [style.background]="carregando ? '' : '#2563eb'">
+          <span *ngIf="carregando"
+            class="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 animate-shimmer"></span>
+          <span class="relative flex items-center justify-center gap-2">
+            <svg *ngIf="carregando" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+              <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+            {{ carregando ? 'Cadastrando...' : 'Cadastrar animal' }}
+          </span>
+        </button>
+
+      </form>
+    </div>
+
+    <p class="text-center text-sm text-gray-500 mt-6">
+      <a routerLink="/home/dashboard" class="text-blue-600 hover:underline font-medium">
+        ← Voltar para o dashboard
+      </a>
+    </p>
+
+  </div>
+</main>

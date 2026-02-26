@@ -1,0 +1,172 @@
+<main class="flex justify-center bg-gray-50 px-4 py-10">
+  <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-10">
+
+    <h2 class="text-2xl font-bold text-center text-gray-800">Criar conta gratuita</h2>
+    <p class="text-center text-gray-500 text-sm mt-2">
+      Cadastre sua ONG no AnimalsONG
+    </p>
+
+    <!-- Erro global -->
+    <div *ngIf="errorMessage"
+      class="mt-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+      <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Sucesso global -->
+    <div *ngIf="successMessage"
+      class="mt-6 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
+      <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Nome -->
+      <div class="flex flex-col gap-1">
+        <input class="input" placeholder="Nome da ONG" formControlName="nome"
+          [class.border-red-400]="form.controls.nome.touched && form.controls.nome.invalid" />
+        <p *ngIf="form.controls.nome.touched && form.controls.nome.errors?.['required']"
+          class="text-red-500 text-xs">Nome é obrigatório</p>
+      </div>
+
+      <!-- CNPJ -->
+      <div class="flex flex-col gap-1">
+        <input class="input" placeholder="CNPJ (opcional)" mask="00.000.000/0000-00" formControlName="cnpj" />
+      </div>
+
+      <!-- Telefones -->
+      <div class="md:col-span-2" formArrayName="telefones">
+        <div *ngFor="let tel of telefones.controls; let i = index" class="flex flex-col gap-1 mb-2">
+          <div class="flex gap-2">
+            <input class="input flex-1" mask="(00) 00000-0000" [formControlName]="i" placeholder="Telefone"
+              [class.border-red-400]="tel.touched && tel.invalid" />
+            <button *ngIf="telefones.length > 1" type="button"
+              class="text-red-500 hover:text-red-700 transition px-2 text-lg font-bold"
+              (click)="removerTelefone(i)">✕</button>
+          </div>
+          <p *ngIf="tel.touched && tel.errors?.['required']" class="text-red-500 text-xs">Telefone é obrigatório</p>
+        </div>
+        <button type="button" class="text-blue-600 hover:text-blue-700 text-sm font-medium transition"
+          (click)="adicionarTelefone()">+ Adicionar telefone</button>
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col gap-1">
+        <input class="input" type="email" placeholder="Email" formControlName="email"
+          [class.border-red-400]="form.controls.email.touched && form.controls.email.invalid" />
+        <p *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
+          class="text-red-500 text-xs">Email é obrigatório</p>
+        <p *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
+          class="text-red-500 text-xs">Email inválido</p>
+      </div>
+
+      <!-- Senha -->
+      <div class="flex flex-col gap-1">
+        <input class="input" type="password" placeholder="Senha" formControlName="senha"
+          [class.border-red-400]="form.controls.senha.touched && form.controls.senha.invalid" />
+        <p *ngIf="form.controls.senha.touched && form.controls.senha.errors?.['required']"
+          class="text-red-500 text-xs">Senha é obrigatória</p>
+        <p *ngIf="form.controls.senha.touched && form.controls.senha.errors?.['minlength']"
+          class="text-red-500 text-xs">A senha deve ter no mínimo 6 caracteres</p>
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div class="flex flex-col gap-1">
+        <input class="input" type="password" placeholder="Confirmar senha" formControlName="confirmarSenha"
+          [class.border-red-400]="form.controls.confirmarSenha.touched && (form.controls.confirmarSenha.invalid || form.errors?.['senhasDiferentes'])" />
+        <p *ngIf="form.controls.confirmarSenha.touched && form.controls.confirmarSenha.errors?.['required']"
+          class="text-red-500 text-xs">Confirmação de senha é obrigatória</p>
+        <p *ngIf="form.controls.confirmarSenha.touched && form.errors?.['senhasDiferentes']"
+          class="text-red-500 text-xs">As senhas não conferem</p>
+      </div>
+
+      <!-- CEP -->
+      <div class="flex flex-col gap-1">
+        <div class="relative">
+          <input class="input pr-10" placeholder="CEP" mask="00000-000" formControlName="cep"
+            (ngModelChange)="buscarCep($event)"
+            [class.border-red-400]="form.controls.cep.touched && form.controls.cep.invalid" />
+          <svg *ngIf="loadingCep" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-blue-500"
+            fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
+            <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+        </div>
+        <p *ngIf="form.controls.cep.touched && form.controls.cep.errors?.['required']"
+          class="text-red-500 text-xs">CEP é obrigatório</p>
+      </div>
+
+      <!-- Cidade -->
+      <div class="flex flex-col gap-1">
+        <input class="input bg-gray-50 cursor-not-allowed" placeholder="Cidade" formControlName="cidade" readonly
+          [class.border-red-400]="form.controls.cidade.touched && form.controls.cidade.invalid" />
+        <p *ngIf="form.controls.cidade.touched && form.controls.cidade.errors?.['required']"
+          class="text-red-500 text-xs">Cidade é obrigatória</p>
+      </div>
+
+      <!-- Estado -->
+      <div class="flex flex-col gap-1">
+        <input class="input bg-gray-50 cursor-not-allowed" placeholder="Estado" formControlName="estado" readonly
+          [class.border-red-400]="form.controls.estado.touched && form.controls.estado.invalid" />
+        <p *ngIf="form.controls.estado.touched && form.controls.estado.errors?.['required']"
+          class="text-red-500 text-xs">Estado é obrigatório</p>
+      </div>
+
+      <!-- Rua -->
+      <div class="flex flex-col gap-1">
+        <input class="input bg-gray-50 cursor-not-allowed" placeholder="Rua" formControlName="rua" readonly
+          [class.border-red-400]="form.controls.rua.touched && form.controls.rua.invalid" />
+        <p *ngIf="form.controls.rua.touched && form.controls.rua.errors?.['required']"
+          class="text-red-500 text-xs">Rua é obrigatória</p>
+      </div>
+
+      <!-- Bairro -->
+      <div class="flex flex-col gap-1">
+        <input class="input bg-gray-50 cursor-not-allowed" placeholder="Bairro" formControlName="bairro" readonly
+          [class.border-red-400]="form.controls.bairro.touched && form.controls.bairro.invalid" />
+        <p *ngIf="form.controls.bairro.touched && form.controls.bairro.errors?.['required']"
+          class="text-red-500 text-xs">Bairro é obrigatório</p>
+      </div>
+
+      <!-- Número -->
+      <div class="flex flex-col gap-1">
+        <input class="input" placeholder="Número" formControlName="numero"
+          [class.border-red-400]="form.controls.numero.touched && form.controls.numero.invalid" />
+        <p *ngIf="form.controls.numero.touched && form.controls.numero.errors?.['required']"
+          class="text-red-500 text-xs">Número é obrigatório</p>
+      </div>
+
+      <!-- Complemento -->
+      <div class="flex flex-col gap-1">
+        <input class="input" placeholder="Complemento (opcional)" formControlName="complemento" />
+      </div>
+
+      <!-- Botão com shimmer -->
+      <button type="submit" [disabled]="loading || !!successMessage"
+        class="md:col-span-2 relative flex justify-center items-center gap-2 text-white font-semibold py-3 rounded-lg transition-all overflow-hidden disabled:opacity-70"
+        [style.background]="loading ? '' : '#2563eb'">
+
+        <span *ngIf="loading"
+          class="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 animate-shimmer"></span>
+
+        <span class="relative flex items-center gap-2">
+          <svg *ngIf="loading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle>
+            <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+          {{ loading ? 'Criando conta...' : 'Criar conta' }}
+        </span>
+      </button>
+
+    </form>
+  </div>
+</main>

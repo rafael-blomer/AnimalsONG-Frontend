@@ -1,0 +1,72 @@
+<header class="bg-gradient-to-r from-blue-500 to-green-600 text-white px-6 py-3 shadow">
+  <nav class="flex items-center justify-between">
+    <h1 class="text-lg font-semibold">
+      <a routerLink="/home/dashboard" class="hover:text-yellow-300">
+        AnimalsONG
+      </a>
+    </h1>
+
+    <div class="flex items-center space-x-8">
+      <a routerLink="/home/ong/perfil" routerLinkActive="text-yellow-300 font-semibold"
+      class="hover:text-yellow-300 font-medium">
+        {{ nomeEmpresa }}
+      </a>
+
+      <button class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded" (click)="logout()">
+        Sair
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div class="flex">
+  <aside class="w-40 h-screen bg-white border-r text-gray-700">
+
+    <div class="px-4 py-3">
+      <p class="font-semibold text-gray-900 mb-2">
+        Animais
+      </p>
+
+      <div class="ml-2 space-y-2 text-sm">
+        <a routerLink="/home/animais/cadastrar" routerLinkActive="text-blue-600 font-semibold"
+          class="block hover:text-blue-600">
+          Cadastrar animal
+        </a>
+
+        <a routerLink="/home/animais/listar" routerLinkActive="text-blue-600 font-semibold"
+          class="block hover:text-blue-600">
+          Lista de animais
+        </a>
+      </div>
+    </div>
+
+    <div class="px-4 py-3">
+      <p class="font-semibold text-gray-900 mb-2">
+        Financeiro
+      </p>
+
+      <div class="ml-2 space-y-2 text-sm">
+        <a routerLink="/home/financeiro/doacao" routerLinkActive="text-blue-600 font-semibold"
+         class="block hover:text-blue-600">
+          Cadastrar doação
+        </a>
+
+        <a routerLink="/home/financeiro/despesa" routerLinkActive="text-blue-600 font-semibold"
+        class="block hover:text-blue-600">
+          Cadastrar despesa
+        </a>
+
+        <a routerLink="/home/financeiro/movimentacoes" routerLinkActive="text-blue-600 font-semibold"
+        class="block hover:text-blue-600">
+          Movimentações
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+
+  <main class="flex-1 p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>

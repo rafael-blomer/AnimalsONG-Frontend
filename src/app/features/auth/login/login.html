@@ -1,0 +1,64 @@
+<main class="flex-1 bg-gray-50 flex items-start justify-center px-4 pt-5">
+
+  <div class="w-full max-w-sm">
+
+    <div class="bg-white rounded-2xl shadow-xl px-8 py-10">
+
+      <h2 class="text-2xl font-bold text-center text-gray-800">
+        Entrar na sua conta
+      </h2>
+      <p class="text-center text-gray-500 mt-2 text-sm">
+        Acesse o AnimalsONG e continue ajudando quem precisa
+      </p>
+
+      <form class="mt-8 space-y-6" [formGroup]="form">
+
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-gray-700">Email</label>
+          <input type="email" placeholder="seu@email.com" formControlName="email" class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-400]="erro" [class.focus:ring-red-400]="erro" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-gray-700">Senha</label>
+          <input type="password" placeholder="••••••••" formControlName="senha" class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            [class.border-red-400]="erro" [class.focus:ring-red-400]="erro" />
+        </div>
+
+        <div *ngIf="erro"
+          class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+          <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>{{ erro }}</span>
+        </div>
+
+        <div class="text-center">
+          <a routerLink="/auth/esqueci-senha" class="text-sm text-blue-600 hover:underline">
+            Esqueci minha senha
+          </a>
+        </div>
+
+        <button type="button" (click)="entrar()" [disabled]="carregando"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50">
+
+          {{ carregando ? 'Entrando...' : 'Entrar' }}
+
+        </button>
+
+      </form>
+    </div>
+
+    <p class="text-center text-sm text-gray-600 mt-6">
+      Ainda não tem conta?
+      <a routerLink="/auth/registrar" class="text-blue-600 font-semibold hover:underline">
+        Cadastre-se gratuitamente
+      </a>
+    </p>
+
+  </div>
+</main>

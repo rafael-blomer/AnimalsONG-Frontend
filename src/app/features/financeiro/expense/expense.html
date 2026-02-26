@@ -1,0 +1,96 @@
+<main class="flex justify-center bg-gray-50 px-4 py-10 min-h-screen">
+  <div class="w-full max-w-lg">
+
+    <div class="bg-white rounded-2xl shadow-xl p-10">
+
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800">Nova despesa</h2>
+        <p class="text-sm text-gray-500 mt-1">Registre uma nova despesa da sua ONG</p>
+      </div>
+
+      <!-- Erro -->
+      <div *ngIf="erro"
+        class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd" />
+        </svg>
+        <span>{{ erro }}</span>
+      </div>
+
+      <!-- Sucesso -->
+      <div *ngIf="sucesso"
+        class="mb-6 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd" />
+        </svg>
+        <span>{{ sucesso }}</span>
+      </div>
+
+      <form [formGroup]="form" class="space-y-5">
+
+        <!-- Tipo de despesa -->
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-700">Tipo de despesa</label>
+          <select class="input" formControlName="tipoDespesa"
+            [class.border-red-400]="f['tipoDespesa'].touched && f['tipoDespesa'].invalid">
+            <option value="" disabled>Selecione o tipo</option>
+            <option *ngFor="let tipo of tiposDespesa" [value]="tipo.valor">{{ tipo.label }}</option>
+          </select>
+          <p *ngIf="f['tipoDespesa'].touched && f['tipoDespesa'].errors?.['required']"
+            class="text-red-500 text-xs">Tipo de despesa é obrigatório</p>
+        </div>
+
+        <!-- Valor -->
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-700">Valor (R$)</label>
+          <div class="relative">
+            <input class="input pl-10" type="number" min="0.01" step="0.01" placeholder="0,00"
+              formControlName="valor"
+              [class.border-red-400]="f['valor'].touched && f['valor'].invalid" />
+          </div>
+          <p *ngIf="f['valor'].touched && f['valor'].errors?.['required']"
+            class="text-red-500 text-xs">Valor é obrigatório</p>
+          <p *ngIf="f['valor'].touched && f['valor'].errors?.['min']"
+            class="text-red-500 text-xs">O valor deve ser maior que zero</p>
+        </div>
+
+        <!-- Descrição -->
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-700">Descrição</label>
+          <textarea class="input resize-none" rows="4" placeholder="Descreva a despesa..."
+            formControlName="descricao"
+            [class.border-red-400]="f['descricao'].touched && f['descricao'].invalid"></textarea>
+          <p *ngIf="f['descricao'].touched && f['descricao'].errors?.['required']"
+            class="text-red-500 text-xs">Descrição é obrigatória</p>
+        </div>
+
+        <!-- Botão -->
+        <button type="button" (click)="cadastrar()" [disabled]="carregando"
+          class="relative w-full text-white font-semibold py-3 rounded-lg transition-all overflow-hidden disabled:opacity-70"
+          [style.background]="carregando ? '' : '#2563eb'">
+          <span *ngIf="carregando"
+            class="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 animate-shimmer"></span>
+          <span class="relative flex items-center justify-center gap-2">
+            <svg *ngIf="carregando" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+              <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+            </svg>
+            {{ carregando ? 'Cadastrando...' : 'Cadastrar despesa' }}
+          </span>
+        </button>
+
+      </form>
+    </div>
+
+    <p class="text-center text-sm text-gray-500 mt-6">
+      <a routerLink="/home/dashboard" class="text-blue-600 hover:underline font-medium">
+        ← Voltar para o dashboard
+      </a>
+    </p>
+
+  </div>
+</main>

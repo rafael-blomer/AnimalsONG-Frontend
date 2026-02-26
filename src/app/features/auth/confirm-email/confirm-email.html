@@ -1,0 +1,36 @@
+<main class="flex justify-center items-center min-h-[60vh] p-6">
+  <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
+
+    <!-- Loading -->
+    <div *ngIf="carregando" class="text-blue-600 font-semibold">
+      Confirmando seu e-mail...
+    </div>
+
+    <!-- Sucesso -->
+    <div *ngIf="sucesso" class="text-green-600 font-semibold">
+      <p class="text-lg mb-4">✅ E-mail confirmado com sucesso!</p>
+      <p>{{ mensagem }}</p>
+
+      <a
+        routerLink="/auth/login"
+        class="inline-block mt-6 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+      >
+        Ir para login
+      </a>
+    </div>
+
+    <!-- Erro -->
+    <div *ngIf="erro" class="text-red-600 font-semibold">
+      <p class="text-lg mb-4">❌ Não foi possível confirmar o e-mail</p>
+      <p>{{ mensagem }}</p>
+
+      <a
+        routerLink="/"
+        class="inline-block mt-6 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+      >
+        Voltar para o início
+      </a>
+    </div>
+
+  </div>
+</main>

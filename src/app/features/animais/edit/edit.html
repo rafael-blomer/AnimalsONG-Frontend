@@ -1,0 +1,228 @@
+<main class="flex justify-center bg-gray-50 px-4 py-10 min-h-screen">
+  <div class="w-full max-w-2xl space-y-6">
+
+    <!-- Carregando -->
+    <div *ngIf="carregando" class="flex justify-center items-center py-20">
+      <svg class="w-8 h-8 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+        <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+      </svg>
+    </div>
+
+    <!-- Erro ao carregar -->
+    <div *ngIf="!carregando && erro && !animal"
+      class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+      <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>{{ erro }}</span>
+    </div>
+
+    <ng-container *ngIf="!carregando && animal">
+
+      <!-- Card principal -->
+      <div class="bg-white rounded-2xl shadow-xl p-10">
+
+        <!-- Cabeçalho -->
+        <div class="flex items-start justify-between mb-8">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Editar animal</h2>
+            <p class="text-sm text-gray-500 mt-1">
+              Entrada em {{ animal.dataEntrada | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+          <a routerLink="/home/animais/listar" class="text-sm text-blue-600 hover:underline font-medium">
+            ← Voltar
+          </a>
+        </div>
+
+        <!-- Erro / Sucesso -->
+        <div *ngIf="erro"
+          class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+          <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>{{ erro }}</span>
+        </div>
+
+        <div *ngIf="sucesso"
+          class="mb-6 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
+          <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>{{ sucesso }}</span>
+        </div>
+
+        <form [formGroup]="form" class="space-y-6">
+
+          <!-- Foto -->
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium text-gray-700">Foto</label>
+
+            <!-- Foto atual ou preview -->
+            <div class="flex items-start gap-4">
+              <div class="relative">
+                <img [src]="fotoPreview ?? animal.fotoUrl" [alt]="animal.nome"
+                  class="w-28 h-28 object-cover rounded-xl border border-gray-200" />
+                <span *ngIf="fotoPreview"
+                  class="absolute -top-1.5 -right-1.5 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                  Nova
+                </span>
+              </div>
+
+              <div class="flex flex-col gap-2 justify-center">
+                <label class="cursor-pointer flex items-center gap-2 px-4 py-2 border border-gray-300
+                         rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition w-fit">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {{ fotoSelecionada ? 'Trocar foto' : 'Alterar foto' }}
+                  <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
+                    (change)="onFotoSelecionada($event)" />
+                </label>
+                <button *ngIf="fotoSelecionada" type="button" (click)="removerFoto()"
+                  class="text-xs text-red-500 hover:underline w-fit">
+                  Cancelar nova foto
+                </button>
+                <p class="text-xs text-gray-400">JPG, PNG ou WEBP — máx. 5MB</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- Nome (desabilitado) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Nome</label>
+              <input class="input-readonly" formControlName="nome" />
+            </div>
+
+            <!-- Raça (desabilitada) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Raça</label>
+              <input class="input-readonly" formControlName="raca" />
+            </div>
+
+            <!-- Espécie (desabilitada) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Espécie</label>
+              <input class="input-readonly" [value]="especieLabel(animal.especie)" />
+            </div>
+
+            <!-- Sexo (desabilitado) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Sexo</label>
+              <input class="input-readonly" [value]="sexoLabel(animal.sexo)" />
+            </div>
+
+            <!-- Idade (editável) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Idade aproximada (anos)</label>
+              <input class="input" type="number" min="0" formControlName="idadeAproximada"
+                [class.border-red-400]="f['idadeAproximada'].touched && f['idadeAproximada'].invalid" />
+              <p *ngIf="f['idadeAproximada'].touched && f['idadeAproximada'].errors?.['required']"
+                class="text-red-500 text-xs">Idade é obrigatória</p>
+              <p *ngIf="f['idadeAproximada'].touched && f['idadeAproximada'].errors?.['min']"
+                class="text-red-500 text-xs">A idade não pode ser negativa</p>
+            </div>
+
+            <!-- Porte (editável) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Porte</label>
+              <select class="input" formControlName="porte"
+                [class.border-red-400]="f['porte'].touched && f['porte'].invalid">
+                <option *ngFor="let p of portes" [value]="p.valor">{{ p.label }}</option>
+              </select>
+              <p *ngIf="f['porte'].touched && f['porte'].errors?.['required']" class="text-red-500 text-xs">Porte é
+                obrigatório</p>
+            </div>
+
+            <!-- Status (editável) -->
+            <div class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-700">Status</label>
+              <select class="input" formControlName="statusAnimal"
+                [class.border-red-400]="f['statusAnimal'].touched && f['statusAnimal'].invalid">
+                <option *ngFor="let s of listaStatus" [value]="s.valor">{{ s.label }}</option>
+              </select>
+              <p *ngIf="f['statusAnimal'].touched && f['statusAnimal'].errors?.['required']"
+                class="text-red-500 text-xs">Status é obrigatório</p>
+            </div>
+
+          </div>
+
+          <!-- Castrado (editável) -->
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="castrado" formControlName="castrado"
+              class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer" />
+            <label for="castrado" class="text-sm text-gray-700 cursor-pointer">Animal castrado</label>
+          </div>
+
+          <!-- Botão salvar -->
+          <button type="button" (click)="salvar()" [disabled]="salvando"
+            class="relative w-full text-white font-semibold py-3 rounded-lg transition-all overflow-hidden disabled:opacity-70"
+            [style.background]="salvando ? '' : '#2563eb'">
+            <span *ngIf="salvando"
+              class="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 animate-shimmer"></span>
+            <span class="relative flex items-center justify-center gap-2">
+              <svg *ngIf="salvando" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+                <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              </svg>
+              {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
+            </span>
+          </button>
+
+        </form>
+      </div>
+
+      <!-- Zona de perigo -->
+      <div class="bg-white rounded-2xl shadow-xl p-10 border border-red-100">
+        <h3 class="text-lg font-bold text-red-600 mb-1">Zona de perigo</h3>
+        <p class="text-sm text-gray-500 mb-6">
+          Ao desativar o animal, ele ficará invisível na plataforma. Esta ação pode ser revertida alterando o status.
+        </p>
+
+        <div *ngIf="!confirmarDesativacao">
+          <button type="button" (click)="solicitarDesativacao()" class="px-5 py-2.5 rounded-lg border border-red-500 text-red-600
+                   hover:bg-red-50 text-sm font-semibold transition">
+            Desativar animal
+          </button>
+        </div>
+
+        <div *ngIf="confirmarDesativacao" class="flex flex-col sm:flex-row items-start sm:items-center gap-4
+                 bg-red-50 border border-red-200 rounded-lg px-5 py-4">
+          <p class="text-sm text-red-700 font-medium flex-1">
+            Tem certeza? O animal será desativado imediatamente.
+          </p>
+          <div class="flex gap-3">
+            <button type="button" (click)="cancelarDesativacao()" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600
+                     hover:bg-gray-50 text-sm font-medium transition">
+              Cancelar
+            </button>
+            <button type="button" (click)="confirmarEDesativar()" [disabled]="desativando"
+              class="relative px-5 py-2 rounded-lg text-white text-sm font-semibold overflow-hidden transition disabled:opacity-70"
+              [style.background]="desativando ? '' : '#dc2626'">
+              <span *ngIf="desativando"
+                class="absolute inset-0 bg-gradient-to-r from-red-500 via-red-400 to-red-600 animate-shimmer"></span>
+              <span class="relative flex items-center gap-2">
+                <svg *ngIf="desativando" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+                  <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+                {{ desativando ? 'Desativando...' : 'Sim, desativar' }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</main>
