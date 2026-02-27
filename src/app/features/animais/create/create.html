@@ -1,16 +1,16 @@
-<main class="flex justify-center bg-gray-50 px-4 py-10 min-h-screen">
+<main class="flex justify-center bg-gray-50 px-3 py-6 md:py-10 min-h-screen">
   <div class="w-full max-w-2xl">
 
-    <div class="bg-white rounded-2xl shadow-xl p-10">
+    <div class="bg-white rounded-2xl shadow-xl p-5 md:p-10">
 
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800">Cadastrar animal</h2>
+      <div class="mb-6 md:mb-8">
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800">Cadastrar animal</h2>
         <p class="text-sm text-gray-500 mt-1">Preencha os dados do animal para cadastrá-lo na plataforma</p>
       </div>
 
       <!-- Erro -->
       <div *ngIf="erro"
-        class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+        class="mb-5 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
         <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -21,7 +21,7 @@
 
       <!-- Sucesso -->
       <div *ngIf="sucesso"
-        class="mb-6 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
+        class="mb-5 flex items-start gap-3 bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 text-sm">
         <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -30,7 +30,7 @@
         <span>{{ sucesso }}</span>
       </div>
 
-      <form [formGroup]="form" class="space-y-6">
+      <form [formGroup]="form" class="space-y-5 md:space-y-6">
 
         <!-- Upload de foto -->
         <div class="flex flex-col gap-2">
@@ -38,13 +38,13 @@
 
           <!-- Preview -->
           <div *ngIf="fotoPreview" class="relative w-fit">
-            <img [src]="fotoPreview" alt="Preview" class="w-32 h-32 object-cover rounded-xl border border-gray-200" />
+            <img [src]="fotoPreview" alt="Preview" class="w-28 h-28 md:w-32 md:h-32 object-cover rounded-xl border border-gray-200" />
             <button type="button" (click)="removerFoto()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white
                      rounded-full flex items-center justify-center text-xs transition">✕</button>
           </div>
 
           <!-- Área de upload -->
-          <label *ngIf="!fotoPreview" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed
+          <label *ngIf="!fotoPreview" class="flex flex-col items-center justify-center w-full h-28 md:h-32 border-2 border-dashed
                    border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition">
             <svg class="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -57,15 +57,14 @@
           </label>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
 
           <!-- Nome -->
           <div class="flex flex-col gap-1">
             <label class="text-sm font-medium text-gray-700">Nome</label>
             <input class="input" placeholder="Ex: Rex" formControlName="nome"
               [class.border-red-400]="f['nome'].touched && f['nome'].invalid" />
-            <p *ngIf="f['nome'].touched && f['nome'].errors?.['required']" class="text-red-500 text-xs">Nome é
-              obrigatório</p>
+            <p *ngIf="f['nome'].touched && f['nome'].errors?.['required']" class="text-red-500 text-xs">Nome é obrigatório</p>
           </div>
 
           <!-- Raça -->
@@ -73,8 +72,7 @@
             <label class="text-sm font-medium text-gray-700">Raça</label>
             <input class="input" placeholder="Ex: Labrador" formControlName="raca"
               [class.border-red-400]="f['raca'].touched && f['raca'].invalid" />
-            <p *ngIf="f['raca'].touched && f['raca'].errors?.['required']" class="text-red-500 text-xs">Raça é
-              obrigatória</p>
+            <p *ngIf="f['raca'].touched && f['raca'].errors?.['required']" class="text-red-500 text-xs">Raça é obrigatória</p>
           </div>
 
           <!-- Idade -->
@@ -96,8 +94,7 @@
               <option value="" disabled>Selecione a espécie</option>
               <option *ngFor="let e of especies" [value]="e.valor">{{ e.label }}</option>
             </select>
-            <p *ngIf="f['especie'].touched && f['especie'].errors?.['required']" class="text-red-500 text-xs">Espécie é
-              obrigatória</p>
+            <p *ngIf="f['especie'].touched && f['especie'].errors?.['required']" class="text-red-500 text-xs">Espécie é obrigatória</p>
           </div>
 
           <!-- Porte -->
@@ -108,8 +105,7 @@
               <option value="" disabled>Selecione o porte</option>
               <option *ngFor="let p of portes" [value]="p.valor">{{ p.label }}</option>
             </select>
-            <p *ngIf="f['porte'].touched && f['porte'].errors?.['required']" class="text-red-500 text-xs">Porte é
-              obrigatório</p>
+            <p *ngIf="f['porte'].touched && f['porte'].errors?.['required']" class="text-red-500 text-xs">Porte é obrigatório</p>
           </div>
 
           <!-- Sexo -->
@@ -120,8 +116,7 @@
               <option value="" disabled>Selecione o sexo</option>
               <option *ngFor="let s of sexos" [value]="s.valor">{{ s.label }}</option>
             </select>
-            <p *ngIf="f['sexo'].touched && f['sexo'].errors?.['required']" class="text-red-500 text-xs">Sexo é
-              obrigatório</p>
+            <p *ngIf="f['sexo'].touched && f['sexo'].errors?.['required']" class="text-red-500 text-xs">Sexo é obrigatório</p>
           </div>
 
         </div>

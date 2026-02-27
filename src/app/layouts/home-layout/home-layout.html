@@ -1,72 +1,82 @@
-<header class="bg-gradient-to-r from-blue-500 to-green-600 text-white px-6 py-3 shadow">
+<header class="bg-gradient-to-r from-blue-500 to-green-600 text-white px-4 py-3 shadow">
   <nav class="flex items-center justify-between">
     <h1 class="text-lg font-semibold">
-      <a routerLink="/home/dashboard" class="hover:text-yellow-300">
-        AnimalsONG
-      </a>
+      <a routerLink="/home/dashboard" class="hover:text-yellow-300">AnimalsONG</a>
     </h1>
 
-    <div class="flex items-center space-x-8">
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center space-x-8">
       <a routerLink="/home/ong/perfil" routerLinkActive="text-yellow-300 font-semibold"
-      class="hover:text-yellow-300 font-medium">
-        {{ nomeEmpresa }}
-      </a>
-
+        class="hover:text-yellow-300 font-medium">{{ nomeEmpresa }}</a>
       <button class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded" (click)="logout()">
         Sair
       </button>
     </div>
+
+    <!-- Mobile: nome + hamburguer -->
+    <div class="flex md:hidden items-center gap-3">
+      <a routerLink="/home/ong/perfil" class="text-sm font-medium truncate max-w-[120px]">{{ nomeEmpresa }}</a>
+      <button (click)="toggleMenu()" class="p-2 rounded-lg hover:bg-white/20 transition" aria-label="Menu">
+        <svg *ngIf="!menuAberto" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg *ngIf="menuAberto" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
   </nav>
+
+  <!-- Mobile dropdown -->
+  <div *ngIf="menuAberto" class="md:hidden mt-3 border-t border-white/30 pt-3 pb-1 space-y-1">
+    <p class="text-xs font-semibold uppercase tracking-wide text-white/70 px-1 mb-1">Animais</p>
+    <a routerLink="/home/animais/cadastrar" routerLinkActive="bg-white/20 font-semibold"
+      (click)="fecharMenu()" class="block px-3 py-2 rounded-lg hover:bg-white/20 text-sm transition">Cadastrar animal</a>
+    <a routerLink="/home/animais/listar" routerLinkActive="bg-white/20 font-semibold"
+      (click)="fecharMenu()" class="block px-3 py-2 rounded-lg hover:bg-white/20 text-sm transition">Lista de animais</a>
+
+    <p class="text-xs font-semibold uppercase tracking-wide text-white/70 px-1 mt-3 mb-1">Financeiro</p>
+    <a routerLink="/home/financeiro/doacao" routerLinkActive="bg-white/20 font-semibold"
+      (click)="fecharMenu()" class="block px-3 py-2 rounded-lg hover:bg-white/20 text-sm transition">Cadastrar doação</a>
+    <a routerLink="/home/financeiro/despesa" routerLinkActive="bg-white/20 font-semibold"
+      (click)="fecharMenu()" class="block px-3 py-2 rounded-lg hover:bg-white/20 text-sm transition">Cadastrar despesa</a>
+    <a routerLink="/home/financeiro/movimentacoes" routerLinkActive="bg-white/20 font-semibold"
+      (click)="fecharMenu()" class="block px-3 py-2 rounded-lg hover:bg-white/20 text-sm transition">Movimentações</a>
+
+    <div class="pt-3 border-t border-white/30">
+      <button class="w-full bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded transition" (click)="logout()">
+        Sair
+      </button>
+    </div>
+  </div>
 </header>
 
-<div class="flex">
-  <aside class="w-40 h-screen bg-white border-r text-gray-700">
-
+<div class="flex min-h-screen">
+  <!-- Desktop sidebar -->
+  <aside class="hidden md:block w-40 min-h-screen bg-white border-r text-gray-700 shrink-0">
     <div class="px-4 py-3">
-      <p class="font-semibold text-gray-900 mb-2">
-        Animais
-      </p>
-
+      <p class="font-semibold text-gray-900 mb-2">Animais</p>
       <div class="ml-2 space-y-2 text-sm">
         <a routerLink="/home/animais/cadastrar" routerLinkActive="text-blue-600 font-semibold"
-          class="block hover:text-blue-600">
-          Cadastrar animal
-        </a>
-
+          class="block hover:text-blue-600">Cadastrar animal</a>
         <a routerLink="/home/animais/listar" routerLinkActive="text-blue-600 font-semibold"
-          class="block hover:text-blue-600">
-          Lista de animais
-        </a>
+          class="block hover:text-blue-600">Lista de animais</a>
       </div>
     </div>
-
     <div class="px-4 py-3">
-      <p class="font-semibold text-gray-900 mb-2">
-        Financeiro
-      </p>
-
+      <p class="font-semibold text-gray-900 mb-2">Financeiro</p>
       <div class="ml-2 space-y-2 text-sm">
         <a routerLink="/home/financeiro/doacao" routerLinkActive="text-blue-600 font-semibold"
-         class="block hover:text-blue-600">
-          Cadastrar doação
-        </a>
-
+          class="block hover:text-blue-600">Cadastrar doação</a>
         <a routerLink="/home/financeiro/despesa" routerLinkActive="text-blue-600 font-semibold"
-        class="block hover:text-blue-600">
-          Cadastrar despesa
-        </a>
-
+          class="block hover:text-blue-600">Cadastrar despesa</a>
         <a routerLink="/home/financeiro/movimentacoes" routerLinkActive="text-blue-600 font-semibold"
-        class="block hover:text-blue-600">
-          Movimentações
-        </a>
+          class="block hover:text-blue-600">Movimentações</a>
       </div>
     </div>
-
   </aside>
 
-
-  <main class="flex-1 p-6">
+  <main class="flex-1 p-4 md:p-6 min-w-0">
     <router-outlet></router-outlet>
   </main>
 </div>

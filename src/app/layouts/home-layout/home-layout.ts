@@ -14,6 +14,7 @@ export class HomeLayout implements OnInit {
 
   nomeEmpresa = 'Nome da Empresa';
   ong!: OngResponse;
+  menuAberto = false;
 
   constructor(
     private authService: AuthService,
@@ -21,8 +22,9 @@ export class HomeLayout implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
+
   ngOnInit(): void {
-        this.ongService.buscarOngPorToken().subscribe({
+    this.ongService.buscarOngPorToken().subscribe({
       next: (ong) => {
         this.ong = ong;
         this.nomeEmpresa = ong.nome;
@@ -31,8 +33,17 @@ export class HomeLayout implements OnInit {
     });
   }
 
+  toggleMenu() {
+    this.menuAberto = !this.menuAberto;
+  }
+
+  fecharMenu() {
+    this.menuAberto = false;
+  }
+
   logout() {
-    this.authService.logout()
-    this.router.navigate([''])
+    this.fecharMenu();
+    this.authService.logout();
+    this.router.navigate(['']);
   }
 }

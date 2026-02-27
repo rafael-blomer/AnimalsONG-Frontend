@@ -1,56 +1,57 @@
-<main class="flex justify-center bg-gray-50 px-4 py-10 min-h-screen">
-  <div class="w-full max-w-4xl space-y-6">
+<main class="flex justify-center bg-gray-50 px-3 py-6 md:py-10 min-h-screen">
+  <div class="w-full max-w-4xl space-y-4 md:space-y-6">
 
     <!-- Cabeçalho -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-3">
       <div>
-        <h2 class="text-2xl font-bold text-gray-800">Animais</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800">Animais</h2>
         <p class="text-sm text-gray-500 mt-1">
           {{ totalElements }} {{ totalElements === 1 ? 'animal cadastrado' : 'animais cadastrados' }}
         </p>
       </div>
       <a routerLink="/home/animais/cadastrar"
-        class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700
-               text-white text-sm font-semibold rounded-lg transition">
+        class="flex items-center gap-2 px-3 py-2 md:px-4 bg-blue-600 hover:bg-blue-700
+               text-white text-sm font-semibold rounded-lg transition whitespace-nowrap">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Novo animal
+        <span class="hidden sm:inline">Novo animal</span>
+        <span class="sm:hidden">Novo</span>
       </a>
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white rounded-2xl shadow-xl p-6">
-      <form [formGroup]="form" class="flex flex-col sm:flex-row gap-4 items-end">
+    <div class="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+      <form [formGroup]="form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 items-end">
 
-        <div class="flex flex-col gap-1 flex-1">
+        <div class="flex flex-col gap-1">
           <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Espécie</label>
           <select class="input" formControlName="especie">
             <option *ngFor="let e of especies" [value]="e.valor">{{ e.label }}</option>
           </select>
         </div>
 
-        <div class="flex flex-col gap-1 flex-1">
+        <div class="flex flex-col gap-1">
           <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Status</label>
           <select class="input" formControlName="statusFiltro">
             <option *ngFor="let s of listaStatus" [value]="s.valor">{{ s.label }}</option>
           </select>
         </div>
 
-        <div class="flex flex-col gap-1 flex-1">
-          <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Ordenar por entrada</label>
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Ordenar</label>
           <select class="input" formControlName="ordem">
-            <option value="dataEntrada,desc">Mais recente primeiro</option>
-            <option value="dataEntrada,asc">Mais antigo primeiro</option>
+            <option value="dataEntrada,desc">Mais recente</option>
+            <option value="dataEntrada,asc">Mais antigo</option>
           </select>
         </div>
 
         <button type="button" (click)="buscar(0)" [disabled]="carregando"
-          class="relative px-6 py-3 rounded-lg text-white text-sm font-semibold overflow-hidden transition disabled:opacity-70 whitespace-nowrap"
+          class="relative px-6 py-3 rounded-lg text-white text-sm font-semibold overflow-hidden transition disabled:opacity-70"
           [style.background]="carregando ? '' : '#2563eb'">
           <span *ngIf="carregando"
             class="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 animate-shimmer"></span>
-          <span class="relative flex items-center gap-2">
+          <span class="relative flex items-center justify-center gap-2">
             <svg *ngIf="carregando" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
               <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
@@ -83,7 +84,7 @@
 
     <!-- Vazio -->
     <div *ngIf="!carregando && animais.length === 0 && !erro"
-      class="bg-white rounded-2xl shadow-xl p-16 flex flex-col items-center justify-center text-center">
+      class="bg-white rounded-2xl shadow-xl p-12 md:p-16 flex flex-col items-center justify-center text-center">
       <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
           d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -95,74 +96,78 @@
     </div>
 
     <!-- Lista -->
-    <div *ngIf="!carregando && animais.length > 0" class="space-y-4">
+    <div *ngIf="!carregando && animais.length > 0" class="space-y-3 md:space-y-4">
       <div *ngFor="let animal of animais"
-        class="bg-white rounded-2xl shadow-xl overflow-hidden flex">
+        class="bg-white rounded-2xl shadow-xl overflow-hidden">
 
-        <!-- Foto -->
-        <div class="w-32 shrink-0">
-          <img [src]="animal.fotoUrl" [alt]="animal.nome" class="w-full h-full object-cover" />
-        </div>
+        <!-- Mobile: vertical layout -->
+        <div class="flex flex-col sm:flex-row">
 
-        <!-- Dados -->
-        <div class="flex flex-1 items-center justify-between px-6 py-4 gap-4">
-          <div class="flex-1 min-w-0">
-
-            <div class="flex items-center gap-2 flex-wrap mb-1">
-              <h3 class="text-base font-bold text-gray-800">{{ animal.nome }}</h3>
-
-              <span class="text-xs bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded-full">
-                {{ especieLabel(animal.especie) }}
-              </span>
-
-              <span *ngIf="animal.castrado"
-                class="text-xs bg-purple-50 text-purple-600 font-semibold px-2 py-0.5 rounded-full">
-                Castrado
-              </span>
-
-              <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
-                [ngClass]="{
-                  'bg-green-50 text-green-700':   animal.status === 'ATIVO',
-                  'bg-indigo-50 text-indigo-700': animal.status === 'ADOTADO',
-                  'bg-red-50 text-red-600':       animal.status === 'OBITO'
-                }">
-                {{ statusLabel(animal.status) }}
-              </span>
-            </div>
-
-            <p class="text-sm text-gray-500">{{ animal.raca }}</p>
-
-            <div class="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
-              <span>🐾 {{ porteLabel(animal.porte) }}</span>
-              <span>⚥ {{ sexoLabel(animal.sexo) }}</span>
-              <span>🎂 {{ animal.idadeAproximada }} {{ animal.idadeAproximada === 1 ? 'ano' : 'anos' }}</span>
-              <span>📅 Entrada: {{ animal.dataEntrada | date:'dd/MM/yyyy' }}</span>
-            </div>
-
+          <!-- Foto -->
+          <div class="w-full h-40 sm:w-32 sm:h-auto shrink-0">
+            <img [src]="animal.fotoUrl" [alt]="animal.nome" class="w-full h-full object-cover" />
           </div>
 
-          <!-- Botão editar -->
-          <button type="button" (click)="editar(animal.id)"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-600 text-blue-600
-                   hover:bg-blue-50 text-sm font-medium transition shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Editar
-          </button>
-        </div>
+          <!-- Dados -->
+          <div class="flex flex-1 flex-col sm:flex-row items-start sm:items-center justify-between px-4 py-4 sm:px-6 gap-3">
+            <div class="flex-1 min-w-0">
 
+              <div class="flex items-center gap-2 flex-wrap mb-1">
+                <h3 class="text-base font-bold text-gray-800">{{ animal.nome }}</h3>
+
+                <span class="text-xs bg-blue-50 text-blue-600 font-semibold px-2 py-0.5 rounded-full">
+                  {{ especieLabel(animal.especie) }}
+                </span>
+
+                <span *ngIf="animal.castrado"
+                  class="text-xs bg-purple-50 text-purple-600 font-semibold px-2 py-0.5 rounded-full">
+                  Castrado
+                </span>
+
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                  [ngClass]="{
+                    'bg-green-50 text-green-700':   animal.status === 'ATIVO',
+                    'bg-indigo-50 text-indigo-700': animal.status === 'ADOTADO',
+                    'bg-red-50 text-red-600':       animal.status === 'OBITO'
+                  }">
+                  {{ statusLabel(animal.status) }}
+                </span>
+              </div>
+
+              <p class="text-sm text-gray-500">{{ animal.raca }}</p>
+
+              <div class="flex flex-wrap gap-2 md:gap-3 mt-2 text-xs text-gray-500">
+                <span>🐾 {{ porteLabel(animal.porte) }}</span>
+                <span>⚥ {{ sexoLabel(animal.sexo) }}</span>
+                <span>🎂 {{ animal.idadeAproximada }} {{ animal.idadeAproximada === 1 ? 'ano' : 'anos' }}</span>
+                <span>📅 {{ animal.dataEntrada | date:'dd/MM/yyyy' }}</span>
+              </div>
+
+            </div>
+
+            <!-- Botão editar -->
+            <button type="button" (click)="editar(animal.id)"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-600 text-blue-600
+                     hover:bg-blue-50 text-sm font-medium transition w-full sm:w-auto justify-center sm:justify-start shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Editar
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
 
     <!-- Paginação -->
-    <div *ngIf="!carregando && totalPages > 1" class="flex items-center justify-center gap-2">
+    <div *ngIf="!carregando && totalPages > 1" class="flex items-center justify-center gap-1 md:gap-2 flex-wrap">
 
       <button type="button" (click)="paginaAnterior()" [disabled]="page === 0"
         class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50
                text-sm transition disabled:opacity-40 disabled:cursor-not-allowed">
-        ← Anterior
+        ← <span class="hidden sm:inline">Anterior</span>
       </button>
 
       <button *ngFor="let p of paginas" type="button" (click)="buscar(p)"
@@ -177,7 +182,7 @@
       <button type="button" (click)="proximaPagina()" [disabled]="page === totalPages - 1"
         class="px-3 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50
                text-sm transition disabled:opacity-40 disabled:cursor-not-allowed">
-        Próxima →
+        <span class="hidden sm:inline">Próxima</span> →
       </button>
 
     </div>
